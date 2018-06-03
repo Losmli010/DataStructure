@@ -99,25 +99,25 @@ class Queue(object):
         self.last = None
 
     def is_empty(self):
-        return self.head
+        return (not self.head)
 
     def append(self, data):
         node = Node(data)
         #链表为空,头节点和尾节点为插入节点
-        if not self.is_empty():
+        if self.is_empty():
             self.head = self.last = node
         else:
             self.last.next = node
             self.last = node
 
     def popleft(self):
-        if not self.is_empty():
+        if self.is_empty():
             raise ValueError("Queue is empty!")
 
         value = self.head.value
         self.head = self.head.next
 
-        if not self.is_empty():
+        if self.is_empty():
             self.last = None
         return value
 
@@ -154,7 +154,7 @@ def get_file_stack(path):
     #创建空栈
     stack = []
     stack.append(path)
-    while len(stack) != 0:
+    while stack:
         #从栈中删除数据,后进先删除
         dir_path = stack.pop()
         file_names = os.listdir(dir_path)
@@ -175,7 +175,7 @@ def get_file_queue(path):
     #创建空队列
     queue = deque()
     queue.append(path)
-    while len(queue) != 0:
+    while queue:
         #从队列中删除数据,先进先删除
         dir_path = queue.popleft()
         file_names = os.listdir(dir_path)
@@ -186,3 +186,6 @@ def get_file_queue(path):
             else:
                 all_files.append(name)
     return all_files
+
+path = os.getcwd()
+print(get_file_queue(path))
