@@ -19,7 +19,7 @@ class Node(object):
         self.value = value
         self.next = next
 
-class LinkedList(object):
+class SingleLinkedList(object):
     #创建空链表
     #head节点永远指向第一个节点
     def __init__(self):
@@ -36,7 +36,7 @@ class LinkedList(object):
 
     #判断链表是否为空
     def is_empty(self):
-        return (self.size() == 0)
+        return self.size() == 0
 
     #链表头部插入数据
     def add_first(self, data):
@@ -105,15 +105,17 @@ class LinkedList(object):
             cur = cur.next
         return values
 
-lists = LinkedList()
-print(lists.test())
-lists.append(12)
-print(lists.test())
-lists.add_first(1)
-print(lists.test())
-lists.insert(1, 0)
-print(lists.test())
-lists.append(2)
-print(lists.test())
-lists.remove(0)
-print(lists.test())
+
+if __name__ == '__main__':
+    lists = SingleLinkedList()
+    print(lists.test())
+    lists.append(12)
+    print(lists.test())
+    lists.add_first(1)
+    print(lists.test())
+    lists.insert(1, 0)
+    print(lists.test())
+    lists.append(2)
+    print(lists.test())
+    lists.remove(0)
+    print(lists.test())
