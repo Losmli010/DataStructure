@@ -15,40 +15,36 @@
 #节点类: 值域存放数据value,指针域存放下一个元素的指针next
 #node.next = next_node指向下一个节点
 class Node(object):
-    def __init__(self, value=None, next=None):
-        self.value = value
+    def __init__(self, data=None, next=None):
+        self.data = data
         self.next = next
 
 class SingleLinkedList(object):
     #创建空链表
     #head节点永远指向第一个节点
     def __init__(self):
-        self.head = None
+        self.head = Node()
+        self._size = 0
 
     #链表大小
     def size(self):
-        length = 0
-        cur = self.head
-        while cur:
-            length += 1
-            cur = cur.next
-        return length
+        return self._size
 
     #判断链表是否为空
     def is_empty(self):
-        return self.size() == 0
+        return self._size == 0
 
     #链表头部插入数据
     def add_first(self, data):
-        #self.head = Node(data, self.head)
         node = Node(data)
         node.next = self.head
         self.head = node
+        self._size += 1
 
     #链表尾部插入数据
-    def append(self, data):
+    def add_last(self, data):
         #头节点是空节点
-        if not self.head:
+        if not self.head.next:
             self.add_first(data)
             return
 
@@ -56,6 +52,9 @@ class SingleLinkedList(object):
         while cur.next:
             cur = cur.next
         cur.next = Node(data)
+        self._size += 1
+
+
 
     #插入
     def insert(self, index, data):
