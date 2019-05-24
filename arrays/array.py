@@ -30,12 +30,11 @@ class Array(object):
     """
     固定大小的数组，支持增删改查和遍历操作
     """
-    def __init__(self, capacity=16):
+    def __init__(self, capacity=10):
         self.capacity = capacity
         self._length = 0
         self._arr = [None] * self.capacity
 
-    @property
     def length(self):
         return self._length
 
@@ -60,18 +59,18 @@ class Array(object):
         self._arr[self._length] = None
         return item
 
-    def index(self, idx):
-        if not isinstance(idx, int):
-            raise ValueError("Invaild index value: %s." % idx)
-        elif idx < 0 or idx > self._length:
+    def _check_range(self, idx):
+        if idx < 0:
             raise IndexError("Index value out of range.")
+        if idx > self._length:
+            raise IndexError("Index value out of range.")
+
+    def get(self, idx):
+        self._check_range(idx)
         return self._arr[idx]
 
-    def update(self, idx, item):
-        if not isinstance(idx, int):
-            raise ValueError("Invaild index value: %s." % idx)
-        elif idx < 0 or idx > self._length:
-            raise IndexError("Index value out of range.")
+    def set(self, idx, item):
+        self._check_range(idx)
         self._arr[idx] = item
 
     def __iter__(self):
@@ -85,18 +84,18 @@ class Array(object):
 
 if __name__ == '__main__':
     ls = Array()
-    print(ls, ls.length)
+    print(ls, ls.length())
     # ls.pop()
     ls.append("hello")
     print(ls)
-    print(ls.index(0))
+    print(ls.get(0))
     for i in range(9):
         ls.append(i)
-    print(ls, ls.length)
+    print(ls, ls.length())
     # ls.append('world')
     print(ls.pop())
     print(ls)
-    ls.update(1, "world")
+    ls.set(1, "world")
     print(ls)
     for item in ls:
         print(item)
