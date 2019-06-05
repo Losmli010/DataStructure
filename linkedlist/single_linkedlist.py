@@ -47,7 +47,7 @@ class SingleLinkedList(object):
             return
 
         cur = self.head
-        while cur.next:
+        while cur.next is not None:
             cur = cur.next
         cur.next = Node(data)
         self._size += 1
@@ -98,7 +98,7 @@ class SingleLinkedList(object):
         if self.is_empty():
             raise ValueError("Linked list is empty!")
         cur = self.head
-        while cur.next:
+        while cur.next is not None:
             if cur.next.data == data:
                 cur.next = cur.next.next
                 self._size -= 1
@@ -106,6 +106,34 @@ class SingleLinkedList(object):
             cur = cur.next
         raise ValueError("Data not exits in Linked list!")
 
+    # 返回中间节点
+    def get_mid_node(self):
+        mid = self._size // 2 + 1
+        cur = self.head
+        for idx in range(mid):
+            cur = cur.next
+        return cur.data
+
+    # 反转链表
+    def reverse(self):
+        reverse_list = self.head
+        prve = Node()
+        cur = self.head.next
+        for i in range(self._size - 1):
+            temp = cur
+            temp.next = temp
+            cur = cur.next
+        reverse_list.next = cur
+        return reverse_list
+
+    # 循环
+    def __iter__(self):
+        cur = self.head.next
+        for i in range(self._size):
+            yield cur.data
+            cur = cur.next
+
+    # 打印
     def __str__(self):
         result = 'HEAD'
         cur = self.head.next
@@ -123,14 +151,16 @@ if __name__ == '__main__':
     ls.insert(3, 8)
     ls.insert(2, 99)
     ls.insert(5, 66)
-    print(ls, ls.size())
+    print(ls, ls.size(), ls.get_mid_node())
+    for data in ls:
+        print(data)
     rt = ls.remove(0)
-    print(ls, ls.size(), rt)
+    print(ls, ls.size(), rt, ls.get_mid_node())
     rt = ls.remove(2)
-    print(ls, ls.size(), rt)
+    print(ls, ls.size(), rt, ls.get_mid_node())
     rt = ls.remove(1)
-    print(ls, ls.size(), rt)
+    print(ls, ls.size(), rt, ls.get_mid_node())
     ls.delete(8)
-    print(ls, ls.size())
+    print(ls, ls.size(), ls.get_mid_node())
     ls.delete(3)
-    print(ls, ls.size())
+    print(ls, ls.size(), ls.get_mid_node())
