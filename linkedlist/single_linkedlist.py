@@ -11,13 +11,17 @@
 访问: O(n)
 """
 
-# 单向链表的实现
-# 节点类: 值域存放数据value,指针域存放下一个元素的指针next
-# node.next = next_node指向下一个节点
+
 class Node(object):
+    """
+    单向链表的实现
+    节点类: 值域存放数据value,指针域存放下一个元素的指针next
+    node.next = next_node指向下一个节点
+    """
     def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
+
 
 class SingleLinkedList(object):
     # 创建空链表
@@ -41,7 +45,7 @@ class SingleLinkedList(object):
 
     # 链表尾部插入数据
     def add_last(self, data):
-        #头节点是空节点
+        # 头节点是空节点
         if not self.head.next:
             self.add_first(data)
             return
