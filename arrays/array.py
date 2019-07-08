@@ -26,6 +26,7 @@ list.sort(cmp=None, key=None, reverse=False)
 list.reverse()
 """
 
+
 class Array(object):
     """
     固定大小的数组，支持增删改查和遍历操作

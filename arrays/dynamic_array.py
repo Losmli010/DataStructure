@@ -23,6 +23,7 @@ class DynamicArray(Array):
         for item in arr:
             self.append(item)
 
+
 if __name__ == '__main__':
     ls = DynamicArray()
     for i in range(20):
