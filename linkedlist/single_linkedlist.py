@@ -122,8 +122,8 @@ class SingleLinkedList(object):
     # 循环
     def __iter__(self):
         cur = self.head
-        while cur.next:
-            yield cur.data
+        while cur:
+            yield cur
             cur = cur.next
 
     # 打印
@@ -140,17 +140,28 @@ if __name__ == '__main__':
     ls = SingleLinkedList()
     for data in [1, 3, 5, 7]:
         ls.append(data)
+    print("*************尾部添加**************")
     print(ls, ls.size(), ls.get_mid_node())
+
+    print("*************头部添加**************")
     ls.append_left(9)
     print(ls, ls.size(), ls.get_mid_node())
 
+    print("***********按索引添加**************")
     ls.insert_by_index(2, 99)
     ls.insert_by_index(5, 66)
     print(ls, ls.size(), ls.get_mid_node())
 
+    print("************按索引删除*************")
     rt = ls.remove(0)
     print(ls, ls.size(), rt, ls.get_mid_node())
     rt = ls.remove(2)
     print(ls, ls.size(), rt, ls.get_mid_node())
 
+    print("***************迭代****************")
+    for node in ls:
+        print(node)
+
+    print("***************反转****************")
     res = ls.reverse()
+    print(res, res.next, res.next.next)
