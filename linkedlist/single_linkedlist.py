@@ -42,7 +42,7 @@ class SingleLinkedList(object):
         return self._size == 0
 
     # 链表头部插入数据
-    def append_left(self, data):
+    def prepend(self, data):
         self.head = Node(data, self.head)
         self._size += 1
 
@@ -50,7 +50,7 @@ class SingleLinkedList(object):
     def append(self, data):
         # 头节点是空节点
         if not self.head:
-            self.append_left(data)
+            self.prepend(data)
             return
 
         cur = self.head
@@ -68,11 +68,11 @@ class SingleLinkedList(object):
         self._check_index(index)
 
         if index == 0:
-            self.append_left(data)
+            self.prepend(data)
             return
 
         cur = self.head
-        idx = 0
+        idx = 1
         while idx < index:
             cur = cur.next
             idx += 1
@@ -81,8 +81,9 @@ class SingleLinkedList(object):
 
     # 按索引删除
     def remove(self, index):
-        if self.is_empty() or index >= self._size or index < 0:
+        if self.is_empty():
             raise ValueError("Index out of linked list size!")
+        self._check_index(index)
 
         if index == 0:
             node = self.head
@@ -144,7 +145,7 @@ if __name__ == '__main__':
     print(ls, ls.size(), ls.get_mid_node())
 
     print("*************头部添加**************")
-    ls.append_left(9)
+    ls.prepend(9)
     print(ls, ls.size(), ls.get_mid_node())
 
     print("***********按索引添加**************")
