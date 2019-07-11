@@ -1,37 +1,42 @@
-#单向链表实现栈
+# 单向链表实现栈
 class Node(object):
-    def __init__(self, value=None, next=None):
-        self.value = value
+    def __init__(self, data, next=None):
+        self.data = data
         self.next = next
+
+    def __str__(self):
+        return "Node<%s>" % self.data
+
 
 class Stack(object):
     def __init__(self):
         self.head = None
 
+    def is_empty(self):
+        return self.head is None
+
     def pop(self):
-        if not self.head:
-            raise ValueError("Stack is empty!")
+        if self.is_empty():
+            return
 
-        value = self.head.value
+        node = self.head
         self.head = self.head.next
-        return value
+        return node
 
-    def append(self, value):
-        if not value:
-            raise ValueError("Invalid value!")
-        self.head = Node(value, self.head)
+    def append(self, data):
+        self.head = Node(data, self.head)
 
-    def test(self):
-        values = []
+    def __str__(self):
+        result = 'HEAD'
         cur = self.head
         while cur:
-            values.append(cur.value)
+            result += '-->%s' % cur.data
             cur = cur.next
-        return values
+        return result
 
 
-#固定大小的数组实现栈
-class StackArray(object):
+# 固定大小的数组实现栈
+class ArrayStack(object):
     def __init__(self, capacity=10):
         self.elements = [None] * capacity
         self.top = -1
@@ -44,7 +49,7 @@ class StackArray(object):
 
     def pop(self):
         if self.is_empty():
-            raise ValueError("Stack is empty!")
+            return
         value = self.elements[self.top]
         self.elements[self.top] = None
         self.top -= 1
@@ -59,22 +64,23 @@ class StackArray(object):
 
 if __name__ == '__main__':
     stack = Stack()
-    print(stack.test())
+    print(stack)
     stack.append(1)
-    print(stack.test())
+    print(stack)
     stack.append(2)
-    print(stack.test())
+    print(stack)
     stack.append(3)
-    print(stack.test())
-    stack.pop()
-    print(stack.test())
-    stack.pop()
-    print(stack.test())
-    stack.pop()
-    print(stack.test())
-    # stack.pop()
+    print(stack)
+    node = stack.pop()
+    print(stack, node)
+    node = stack.pop()
+    print(stack, node)
+    node = stack.pop()
+    print(stack, node)
+    node = stack.pop()
+    print(stack, node)
 
-    arr = StackArray()
+    arr = ArrayStack()
     print(arr.elements)
     arr.append(1)
     print(arr.elements)
