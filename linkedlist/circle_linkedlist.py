@@ -85,5 +85,9 @@ if __name__ == '__main__':
         print(alist, alist.size(), alist.head, alist.tail)
 
     print("**********尾部删除**************")
-    for _ in range(alist.size()):
+    for _ in range(4):
         print(alist.pop(), alist)
+
+    print("**********头部删除**************")
+    for _ in range(4):
+        print(alist.prepop(), alist)
