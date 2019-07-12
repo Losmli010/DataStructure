@@ -69,7 +69,6 @@ class HashTable(object):
             # 键值不存在，添加到链表尾部
             entry.next = Entry(key, value)
             self._size += 1
-        print(self._size)
 
     def remove(self, key):
         """
