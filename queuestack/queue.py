@@ -27,7 +27,7 @@ class Queue(object):
 
     def popleft(self):
         if self.is_empty():
-            return 
+            return
 
         node = self.head
         self.head = self.head.next
