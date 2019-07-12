@@ -49,26 +49,27 @@ class HashTable(object):
             self._resize()
 
         idx = self._hash(key)
-        # index对应的桶中没有数据
-        if self._buckets[idx] is None:
+        entry = self._buckets[idx]
+        # idx对应的桶中没有数据
+        if entry is None:
             self._buckets[idx] = Entry(key, value)
             self._size += 1
             return
         else:
-            entry = self._buckets[idx]
-            # 第一个就是要找的键
+            # 链表第一个键值对需要修改
             if entry.key == key:
                 entry.value = value
                 return
             while entry.next:
+                entry = entry.next
                 # 键值存在，更新值
                 if entry.key == key:
                     entry.value = value
                     return
-                entry = entry.next
             # 键值不存在，添加到链表尾部
             entry.next = Entry(key, value)
             self._size += 1
+        print(self._size)
 
     def remove(self, key):
         """
@@ -180,7 +181,7 @@ if __name__ == '__main__':
     print(dictionary.get(10))
 
     print("*************修改键值********************")
-    print(dictionary.add(10, 1000), dictionary.get(10))
+    print(dictionary.add(11, 1000), dictionary.get(11))
 
     print("*************删除键值********************")
     for key in range(40):
