@@ -14,9 +14,9 @@ LRU Cache具备的操作：
 """
 
 
-class Entry(object):
+class Node(object):
     """
-    双向链表
+    节点
     """
     def __init__(self, key, value, prev=None, next=None):
         self.key = key
@@ -25,10 +25,63 @@ class Entry(object):
         self.next = next
 
     def __str__(self):
-        return "Entry<%r, %r>" % (self.key, self.value)
+        return "Node<%r, %r>" % (self.key, self.value)
+
+
+class Entry(object):
+    """
+    双向链表
+    """
+    def __init__(self, head=None, tail=None):
+        self.head = head
+        self.tail = tail
 
 
 class LRUCache(object):
-    """
+    def __init__(self, capacity=64):
+        self._capacity = capacity
+        self._buckets = [None] * self._capacity
+        # key-value个数
+        self._size = 0
 
-    """
+    def get(self, key):
+        """
+        :param key:
+        :return:
+        """
+
+    def set(self, key, value):
+        """
+        :param key:
+        :param value:
+        :return:
+        """
+        idx = self._hash(key)
+        entry = self._buckets[idx]
+        # 当前桶中无数据
+        if entry is None:
+            node = Node(key, value)
+            self._buckets[idx] = Entry(node, node)
+            self._size += 1
+        else:
+            cur = entry.head
+            while cur:
+                # 键值存在，重置值，并将该节点移到头部
+                if cur.key == key:
+                    cur.value = value
+                    cur.prev = cur.next
+                cur = cur.next
+
+    def _hash(self, key):
+        """
+        哈希函数
+        :param key:
+        :return:
+        """
+        power = 0
+        hashing = 0
+        for char in str(key):
+            hashing += (ord(char) - 32) * pow(95, power)
+            power += 1
+        index = hashing % self._capacity
+        return index
