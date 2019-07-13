@@ -150,6 +150,28 @@ class HashTable(object):
         index = hashing % self._capacity
         return index
 
+    def get_distribution(self):
+        string = ''
+        min_entries = None
+        max_entries = 0
+        total_entries = 0
+        for entry in self._buckets:
+            if entry is not None:
+                count = 0
+                while entry:
+                    count += 1
+                    entry = entry.next
+                total_entries += count
+                if count > max_entries:
+                    max_entries = count
+                if (min_entries is None) or (count < min_entries):
+                    min_entries = count
+        string += ("Largest Bucket has %d entries\n"
+                   "Smallest Bucket has %d entries\n"
+                   "Total entries: %d\n"
+                   "Avg bucket size is %.1f" % (max_entries, min_entries, total_entries, (total_entries / self._capacity)))
+        return string
+
     def __iter__(self):
         result = []
         for entry in self._buckets:
@@ -175,6 +197,7 @@ if __name__ == '__main__':
     for key, value in enumerate(range(100, 140)):
         dictionary.add(key, value)
     print(dictionary)
+    print(dictionary.get_distribution())
 
     print("*************获取键值********************")
     print(dictionary.get(10))
