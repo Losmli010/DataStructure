@@ -14,28 +14,6 @@ LRU Cache具备的操作：
 """
 
 
-class Node(object):
-    """
-    节点
-    """
-    def __init__(self, key, value, prev=None, next=None):
-        self.key = key
-        self.value = value
-        self.prev = prev
-        self.next = next
-
-    def __str__(self):
-        return "Node<%r, %r>" % (self.key, self.value)
-
-
-class Entry(object):
-    """
-    双向链表
-    """
-    def __init__(self, head=None, tail=None):
-        self.head = head
-        self.tail = tail
-
 
 class LRUCache(object):
     def __init__(self, capacity=64):
@@ -56,21 +34,6 @@ class LRUCache(object):
         :param value:
         :return:
         """
-        idx = self._hash(key)
-        entry = self._buckets[idx]
-        # 当前桶中无数据
-        if entry is None:
-            node = Node(key, value)
-            self._buckets[idx] = Entry(node, node)
-            self._size += 1
-        else:
-            cur = entry.head
-            while cur:
-                # 键值存在，重置值，并将该节点移到头部
-                if cur.key == key:
-                    cur.value = value
-                    cur.prev = cur.next
-                cur = cur.next
 
     def _hash(self, key):
         """
