@@ -14,6 +14,9 @@ LRU Cache具备的操作：
 """
 import pickle
 
+"""
+存在bug
+"""
 
 
 class Entry(object):
@@ -51,6 +54,12 @@ class LRUCache(object):
         :param key:
         :return:
         """
+        entry = self.has_key(key)
+        if entry:
+            self._delete(key)
+            self._move2head(key, entry.value)
+            return entry.value
+        return -1
 
     def set(self, key, value):
         """
@@ -58,66 +67,69 @@ class LRUCache(object):
         :param value:
         :return:
         """
-
-        entry = self._search(key)
-        if entry is not None:
-            self._delete(entry)
-            return
-        self._add2head(key, value)
-
-        # key不存在，添加到头部
-        # cache满了, 删除尾部
-        if self._size > self._capacity:
+        if self.has_key(key):
+            self._delete(key)
+            self._move2head(key, value)
+        elif self._size == self._capacity:
+            # 键值不存在
+            # cache满了, 删除尾部，添加到头部
             self._delete_tail()
-            self._add2head(key, value)
+            self._move2head(key, value)
+        else:
+            # cache未满， 添加到头部
+            self._move2head(key, value)
 
-    def _search(self, key):
-        # 找到单链表中键值为key的节点并返回
+    def has_key(self, key):
+        # 判断单链表中是否有键值为key的节点
         idx = self._hash(key)
         entry = self._buckets[idx]
         while entry:
             if entry.key == key:
                 return entry
             entry = entry.hnext
-        return
 
-    def _delete(self, entry):
-        if self.head is None:
-            return
-
-        # 双向链表删除操作
-        entry.prev.next = entry.next
-        self._size -= 1
-        idx = self._hash(entry.key)
+    def _delete(self, key):
+        idx = self._hash(key)
         single = self._buckets[idx]
         # 单向链表第一个节点
-        if entry is single:
+        if single.key == key:
+            # 双向链表删除操作
+            single.prev.next = single.next
+            self._size -= 1
             self._buckets[idx] = single.hnext
         else:
             while single:
                 prev = single.copy()
                 single = single.hnext
-                if entry is single:
+                if single.key == key:
+                    single.prev.next = single.next
                     prev.hnext = single.hnext
+                    self._size -= 1
                     self._buckets[idx] = prev
                     return
 
     def _delete_tail(self):
-        if self.head is None:
-            return
         tail = self.tail.copy()
         self.tail = tail.prev
         self.head.prev = self.tail
         self._size -= 1
 
-    def _add2head(self, key, value):
+    def _move2head(self, key, value):
+        idx = self._hash(key)
+        single = self._buckets[idx]
+
         if self.head is None:
+            # 双向链表为空
             self.head = Entry(key, value)
             self.tail = self.head
+            self._buckets[idx] = self.head
         else:
+            # key值不存在
             temp = self.head
             self.head = Entry(key, value, self.tail, self.head)
             temp.prev = self.head
+            self.tail.next = self.head
+            self._buckets[idx] = self.head
             self.tail.next = self.head
         self._size += 1
 
@@ -139,7 +151,6 @@ class LRUCache(object):
         result = 'HEAD'
         cur = self.head
         i = 0
-        print(self._size)
         while i < self._size:
             result += '--><%r, %r>' % (cur.key, cur.value)
             cur = cur.next
@@ -159,3 +170,10 @@ if __name__ == '__main__':
     print(cache)
     cache.set(3, 8)
     print(cache)
+    cache.set(5, 5)
+    print(cache)
+    cache.set(5, 9)
+    print(cache)
+
+    print(cache.get(10), cache)
+    print(cache.get(3), cache)
