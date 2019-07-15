@@ -58,77 +58,67 @@ class LRUCache(object):
         :param value:
         :return:
         """
+
+        entry = self._search(key)
+        if entry is not None:
+            self._delete(entry)
+            return
+        self._add2head(key, value)
+
+        # key不存在，添加到头部
+        # cache满了, 删除尾部
+        if self._size > self._capacity:
+            self._delete_tail()
+            self._add2head(key, value)
+
+    def _search(self, key):
+        # 找到单链表中键值为key的节点并返回
         idx = self._hash(key)
-        # 双向链表中无数据
+        entry = self._buckets[idx]
+        while entry:
+            if entry.key == key:
+                return entry
+            entry = entry.hnext
+        return
+
+    def _delete(self, entry):
         if self.head is None:
-            entry = Entry(key, value)
-            self.head = entry
-            self.tail = entry
-            # 单向链表
-            self._buckets[idx] = entry
-            self._size += 1
-            print('无数据')
+            return
+
+        # 双向链表删除操作
+        entry.prev.next = entry.next
+        self._size -= 1
+        idx = self._hash(entry.key)
+        single = self._buckets[idx]
+        # 单向链表第一个节点
+        if entry is single:
+            self._buckets[idx] = single.hnext
         else:
-            single = self._buckets[idx]
-            # 单向链表中无数据
-            if single is None:
-                # 新数据添加到双向链表头部
-                print('新数据添加到双向链表头部')
-                self._move2head(key, value)
-                self._buckets[idx] = self.head
-                # print(self.head, self.tail.prev)
-            else:
-                print(single, single.prev, single.next)
-                # 单向链表第一个节点
-                if single.key == key:
-                    print('单向链表第一个节点')
-                    if single is self.head:
-                        self.head.value = value
-                    elif single is self.tail:
-                        self._delete_tail()
-                        self._move2head(key, value)
-                    else:
-                        print('删除节点')
-                        # 删除节点
-                        print(single, single.prev, single.next)
-                        single.prev.next = single.next
-                        self._size -= 1
-                        self._move2head(key, value)
+            while single:
+                prev = single.copy()
+                single = single.hnext
+                if entry is single:
+                    prev.hnext = single.hnext
+                    self._buckets[idx] = prev
                     return
-                else:
-                    while single.hnext:
-                        prev = single.copy()
-                        single = single.hnext
-                        # 单向链表第二个节点
-                        if single.key == key:
-                            # key已经存在，删除，添加到头部
-                            prev.next = single.next
-                            self._size -= 1
-                            self._move2head(key, value)
-                            prev.hnext = single.hnext
-                            self._buckets[idx] = prev
-                            return
 
-                    # key不存在，添加到头部
-                    # cache满了, 删除尾部
-                    print(11111111)
-                    if self._size == self._capacity:
-                        self._delete_tail()
-                    self._move2head(key, value)
-
-    def _delete_node(self, node):
-        if node is None:
-            return 
+    def _delete_tail(self):
+        if self.head is None:
+            return
         tail = self.tail.copy()
         self.tail = tail.prev
-        self.tail.next = self.head
+        self.head.prev = self.tail
         self._size -= 1
 
-    def _move2head(self, node):
-        node = node.copy()
-        head = self.head.copy()
-        self.head = Entry(key, value, self.tail, head)
-        self.tail.next = self.head
+    def _add2head(self, key, value):
+        if self.head is None:
+            self.head = Entry(key, value)
+            self.tail = self.head
+        else:
+            temp = self.head
+            self.head = Entry(key, value, self.tail, self.head)
+            temp.prev = self.head
+            self.tail.next = self.head
         self._size += 1
 
     def _hash(self, key):
