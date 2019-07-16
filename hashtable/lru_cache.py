@@ -73,7 +73,7 @@ class LRUCache(object):
         elif self._size == self._capacity:
             # 键值不存在
             # cache满了, 删除尾部，添加到头部
-            self._delete_tail()
+            self._delete(self.tail.key)
             self._move2head(key, value)
         else:
             # cache未满， 添加到头部
@@ -89,6 +89,9 @@ class LRUCache(object):
             entry = entry.hnext
 
     def _delete(self, key):
+        if self.head.key == key:
+            return
+
         idx = self._hash(key)
         single = self._buckets[idx]
         # 单向链表第一个节点
@@ -108,16 +111,12 @@ class LRUCache(object):
                     self._buckets[idx] = prev
                     return
 
-    def _delete_tail(self):
-        tail = self.tail.copy()
-        self.tail = tail.prev
-        self.head.prev = self.tail
-        self._size -= 1
-
     def _move2head(self, key, value):
-        idx = self._hash(key)
-        single = self._buckets[idx]
+        if (self.head is not None) and (self.head.key == key):
+            self.head.value = value
+            return
 
+        idx = self._hash(key)
         if self.head is None:
             # 双向链表为空
             self.head = Entry(key, value)
@@ -177,3 +176,5 @@ if __name__ == '__main__':
 
     print(cache.get(10), cache)
     print(cache.get(3), cache)
+    print(cache.get(5), cache)
+    print(cache.get(4), cache)
