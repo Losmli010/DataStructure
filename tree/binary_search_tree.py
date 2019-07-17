@@ -5,7 +5,9 @@
 (03) 任意节点的左、右子树也分别为二叉查找树
 (04) 没有键值相等的节点（no duplicate nodes）
 """
+import pickle
 
+copy = lambda obj: pickle.loads(pickle.dumps(obj, 4))
 
 class TreeNode(object):
     def __init__(self, key, left, right, parent):
@@ -69,6 +71,7 @@ class BinarySearchTree(object):
                 if (cur.left is None) and (cur.right is None):
                     if cur.parent is None:      # 删除节点为根节点
                         self.root = None
+                        return
                     elif cur.parent.left.key == key:    # 删除节点为左叶子节点
                         cur.parent.left = None
                     else:
@@ -89,14 +92,16 @@ class BinarySearchTree(object):
                         cur.parent.left = cur.right
                     else:
                         cur.parent.right = cur.right
-                # cur左右子树
+                # cur有左右子树
                 elif (cur.left is not None) and (cur.right is not None):
-                    if cur.parent is None:  # 删除节点为根节点
-                        self.root = self.root.right
-                    elif cur.parent.left.key == key:  # 删除节点为左子树节点
-                        cur.parent.left = cur.right
-                    else:
-                        cur.parent.right = cur.right
+                    # 找到右子树中的最小节点并交换key
+                    val = copy(cur.key)
+                    temp = copy(cur.right)
+                    while temp.left:
+                        temp = temp.left
+                    cur.key = temp.key
+                    cur = temp
+                    cur.key = val
 
     def get(self, key):
         """
@@ -115,43 +120,70 @@ class BinarySearchTree(object):
                 # 左子树中查找
                 cur = cur.left
 
-    def get_predecessor(self, key):
+    def get_min(self):
         """
-        查找前驱节点
-        :param key:
+        查找最小节点
         :return:
         """
+        cur = self.root
+        while cur.left:
+            cur = cur.left
+        return cur
 
-    def get_successor(self, key):
+    def get_max(self):
         """
-        查找后继节点
-        :param key:
+        查找最大节点
         :return:
         """
+        cur = self.root
+        while cur.right:
+            cur = cur.right
+        return cur
 
-    def preorder(self):
+    def preorder(self, node):
         """
-        前序遍历
+        前序遍历：根节点->左子树->右子树
         :return:
         """
+        if node is not None:
+            yield node.key
+            yield self.preorder(node.left)
+            yield self.preorder(node.right)
 
-    def inorder(self):
+    def inorder(self, node):
         """
-        中序遍历
+        中序遍历：左子树->根节点->右子树
         :return:
         """
+        if node is not None:
+            yield self.inorder(node.left)
+            yield node.key
+            yield self.inorder(node.right)
 
-    def postorder(self):
+    def postorder(self, node):
         """
-        后序遍历
+        后序遍历：左子树->右子树->根节点
         :return:
         """
-
-    def levelorder(self):
-        """
-        按层遍历
-        :return:
-        """
+        if node is not None:
+            yield self.postorder(node.left)
+            yield self.postorder(node.right)
+            yield node.key
 
     def __str__(self):
-        pass
+        result = ""
+        cur = self.root
+        while cur:
+            result += "-->%s" % cur.key
+            left = cur.left
+            while left:
+                left = left.left
+
+        return result
+
+if __name__ == '__main__':
+    tree = BinarySearchTree()
+    for i in range(10):
+        tree.insert(i)
+        print(tree.get(i))
+        print(tree.remove(i))
