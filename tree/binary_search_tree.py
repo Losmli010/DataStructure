@@ -89,7 +89,7 @@ class BinarySearchTree(object):
                 elif (cur.left is None) and (cur.right is not None):
                     if cur.parent is None:  # 删除节点为根节点
                         self.root = self.root.right
-                    elif cur.parent.left.key == key:  # 删除节点为左子树节点
+                    elif cur.parent.key > key:  # 删除节点为左子树节点
                         cur.parent.left = cur.right
                     else:
                         cur.parent.right = cur.right
