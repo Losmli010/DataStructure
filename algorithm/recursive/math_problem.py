@@ -47,4 +47,3 @@ if __name__ == '__main__':
 
     permutation_list = permutation([1, 2, 3, 4], 0, 4)
     print('全排列：%r' % permutation_list)
-
