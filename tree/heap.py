@@ -23,7 +23,6 @@ class Heap(object):
 
         self._siftup()
 
-
     def heappop(self):
         """
         返回堆顶元素
@@ -81,6 +80,7 @@ class Heap(object):
 
     def __str__(self):
         return "%r" % self._data
+
 
 if __name__ == '__main__':
     heap = Heap()
